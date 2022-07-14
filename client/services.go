@@ -14,6 +14,7 @@ type Service struct {
 	Port      int
 	LocalPort int
 	Name      string
+	Namespace string
 	Pod       v1.Pod
 }
 
@@ -44,6 +45,7 @@ func (svc Service) getServiceWithPort(client kubernetes.Interface, namespace str
 					for _, v := range pods.Items {
 						svc.Pod = v
 						svc.Name = service.Name
+						svc.Namespace = namespace
 						svc.Port = int(requiredPort)
 						svc.LocalPort = int(localPort)
 						return &svc
