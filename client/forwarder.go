@@ -17,14 +17,18 @@ import (
 	"k8s.io/client-go/transport/spdy"
 )
 
-func Forward(service *Service, config *rest.Config) {
+type ServiceCollection struct {
+	Services []Service
+}
+
+func Forward(services *ServiceCollection, config *rest.Config) {
 
 	var wg sync.WaitGroup
 	wg.Add(1)
 	// managing termination signal from the terminal. As you can see the stopCh
 	// gets closed to gracefully handle its termination.
 	sigs := make(chan os.Signal, 1)
-	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 
 	// stopCh control the port forwarding lifecycle. When it gets closed the
 	// port forward will terminate
@@ -50,18 +54,20 @@ func Forward(service *Service, config *rest.Config) {
 	go func() {
 		// PortForward the pod specified from its port 9090 to the local port
 		// 8080
-		fmt.Printf("Opening connection to %s:%s\n", service.Name, service.Pod.Name)
-		err := PortForwardAPod(PortForwardAPodRequest{
-			RestConfig: config,
-			Pod:        service.Pod,
-			LocalPort:  service.LocalPort,
-			PodPort:    service.Port,
-			Streams:    stream,
-			StopCh:     stopCh,
-			ReadyCh:    readyCh,
-		})
-		if err != nil {
-			panic(err)
+		for _, service := range services.Services {
+			fmt.Printf("Opening connection to %s:%s\n", service.Name, service.Pod.Name)
+			err := PortForwardAPod(PortForwardAPodRequest{
+				RestConfig: config,
+				Pod:        service.Pod,
+				LocalPort:  service.LocalPort,
+				PodPort:    service.Port,
+				Streams:    stream,
+				StopCh:     stopCh,
+				ReadyCh:    readyCh,
+			})
+			if err != nil {
+				panic(err)
+			}
 		}
 	}()
 
@@ -69,7 +75,6 @@ func Forward(service *Service, config *rest.Config) {
 	case <-readyCh:
 		break
 	}
-	fmt.Printf("Port forwarding to %v in namespace %v is ready to get traffic. have fun!\n", service.Name, service.Namespace)
 
 	wg.Wait()
 }
