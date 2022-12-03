@@ -24,17 +24,11 @@ type ServiceCollection struct {
 func Forward(services *ServiceCollection, config *rest.Config) {
 
 	var wg sync.WaitGroup
-	wg.Add(1)
 	// managing termination signal from the terminal. As you can see the stopCh
 	// gets closed to gracefully handle its termination.
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 
-	// stopCh control the port forwarding lifecycle. When it gets closed the
-	// port forward will terminate
-	stopCh := make(chan struct{}, 1)
-	// readyCh communicate when the port forward is ready to get traffic
-	readyCh := make(chan struct{})
 	// stream is used to tell the port forwarder where to place its output or
 	// where to expect input if needed. For the port forwarding we just need
 	// the output eventually
@@ -44,17 +38,33 @@ func Forward(services *ServiceCollection, config *rest.Config) {
 		ErrOut: os.Stderr,
 	}
 
-	go func() {
+	stopChannels := make([]chan struct{}, len(services.Services))
+
+	for i := range stopChannels {
+		stopChannels[i] = make(chan struct{}, 1)
+	}
+
+	go func(stopChannels []chan struct{}) {
 		<-sigs
 		fmt.Println("Bye...")
-		close(stopCh)
-		wg.Done()
-	}()
+		for _, stopCh := range stopChannels {
+			close(stopCh)
+			wg.Done()
+		}
+	}(stopChannels)
 
-	go func() {
-		// PortForward the pod specified from its port 9090 to the local port
-		// 8080
-		for _, service := range services.Services {
+	// PortForward the pod specified from its port 9090 to the local port
+	// 8080
+	serviceCounter := 0
+	for _, service := range services.Services {
+		// stopCh control the port forwarding lifecycle. When it gets closed the
+		// port forward will terminate
+
+		// readyCh communicate when the port forward is ready to get traffic
+		readyCh := make(chan struct{})
+		wg.Add(1)
+		go func(service Service, serviceCounter int) {
+
 			fmt.Printf("Opening connection to %s:%s\n", service.Name, service.Pod.Name)
 			err := PortForwardAPod(PortForwardAPodRequest{
 				RestConfig: config,
@@ -62,20 +72,21 @@ func Forward(services *ServiceCollection, config *rest.Config) {
 				LocalPort:  service.LocalPort,
 				PodPort:    service.Port,
 				Streams:    stream,
-				StopCh:     stopCh,
+				StopCh:     stopChannels[serviceCounter],
 				ReadyCh:    readyCh,
 			})
 			if err != nil {
 				panic(err)
 			}
+		}(service, serviceCounter)
+
+		select {
+		case <-readyCh:
+			break
 		}
-	}()
 
-	select {
-	case <-readyCh:
-		break
+		serviceCounter++
 	}
-
 	wg.Wait()
 }
 
