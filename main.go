@@ -9,7 +9,7 @@ import (
 
 func main() {
 
-	remotePort := flag.Int("p", 22, "Port for remote connection")
+	remotePort := flag.Int("p", 0, "Port for remote connection")
 	kubeClient, config, workingNamespace := client.New()
 
 	fmt.Println("Working namespace:", workingNamespace)
