@@ -1,0 +1,34 @@
+name: Build production Image
+
+inputs:
+  tag:
+    required: false
+    default: ""
+    description: 'Tag to deploy'
+    type: string
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Detect Version
+      id: detect_version
+      run: |
+        if [ "${{ inputs.tag }}" == "" ]; then
+          COMMIT=${GITHUB_SHA::7}
+          echo "docker_tag=$COMMIT" >> $GITHUB_ENV
+        else 
+          echo "docker_tag=${{ inputs.tag }}" >> $GITHUB_ENV
+        fi
+
+    - name: Build Docker Image
+      uses: ForestsoftGmbH/gh-build-action@main
+      with:
+        DOCKER_IMAGE: forestsoft/devctl
+        DOCKER_TAG: ${{ steps.detect_version.outputs.docker_tag }}
+        File: ./Dockerfile
+        context: .
+        Username: ${{ secrets.DOCKER_USERNAME }}
+        Password: ${{ secrets.DOCKER_PASSWORD }}
