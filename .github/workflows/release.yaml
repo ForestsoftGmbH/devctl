@@ -28,6 +28,7 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/build
         with:
           tag: ${{ needs.setup.outputs.version }}
