@@ -34,7 +34,7 @@ runs:
       uses: ForestsoftGmbH/gh-build-action@main
       with:
         DOCKER_IMAGE: forestsoft/devctl
-        DOCKER_TAG: ${{ input.tag }}
+        DOCKER_TAG: ${{ inputs.tag }}
         File: ./Dockerfile
         context: .
         Username: ${{ inputs.docker_username }}
