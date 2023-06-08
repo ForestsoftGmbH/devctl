@@ -1,4 +1,4 @@
-FROM golang:alpine as builder
+FROM golang:1.19-bullseye as builder
 #ENV CGO_ENABLED=1
 #ENV GOOS=linux
 #ENV GOARCH=amd64
