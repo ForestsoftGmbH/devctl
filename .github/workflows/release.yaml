@@ -24,8 +24,7 @@ jobs:
          version=$(echo "${{github.ref}}" | sed 's#refs/tags/##')
          echo "version=$version" >> $GITHUB_OUTPUT
   build:
-    needs:
-      - setup
+    needs: setup
     uses: ./.github/workflows/build.yaml
     with:
       version: ${{ needs.setup.outputs.version }}
