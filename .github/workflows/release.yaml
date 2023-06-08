@@ -9,8 +9,7 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     steps:
-      - id: version
-        shell: bash
+      - shell: bash
         run: |
          if [ "${{inputs.tag}}" == "" ]; then
          COMMIT=${GITHUB_SHA::7}
