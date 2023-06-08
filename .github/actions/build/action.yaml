@@ -1,20 +1,18 @@
 name: Build production Image
-
+description: build devctl image
 inputs:
   docker_username:
     required: true
+    description: 'user'
     default: ""
-    type: string
   docker_password:
+    description: 'pass'
     required: true
     default: ""
-    type: string
   tag:
     required: false
     default: ""
     description: 'Tag to deploy'
-    type: string
-
 runs:
   using: "composite"
   steps:
@@ -23,6 +21,7 @@ runs:
 
     - name: Detect Version
       id: detect_version
+      shell: bash
       run: |
         if [ "${{ inputs.tag }}" == "" ]; then
           COMMIT=${GITHUB_SHA::7}
