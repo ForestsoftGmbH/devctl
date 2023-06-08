@@ -22,8 +22,12 @@ func main() {
 
 	remotePort := flag.Int("p", 0, "Port for remote connection")
 
-	_, errList := clientcmd.NewDefaultClientConfigLoadingRules().Load()
+	rules, errList := clientcmd.NewDefaultClientConfigLoadingRules().Load()
 	if errList != nil {
+		fmt.Println("Could not find any kubernetes context. please define .kubeconfig")
+		os.Exit(255)
+	}
+	if len(rules.Contexts) < 1 {
 		fmt.Println("Could not find any kubernetes context. please define .kubeconfig")
 		os.Exit(255)
 	}
