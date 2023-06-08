@@ -25,12 +25,14 @@ jobs:
           go-version: '1.19'
 
       - name: Build
-        run: go build -o ./devctl -v ./...
+        run: go build -o devctl -v ./...
 
       - name: Test
         run: go test -v ./...
   container:
     runs-on: ubuntu-latest
+    needs:
+      - build
     steps:
       - id: detect_version
         run: |
