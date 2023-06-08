@@ -55,6 +55,7 @@ jobs:
             else 
             echo "docker_tag=${{inputs.tag}}" >> $GITHUB_OUTPUT
             fi
+            ls -al 
       - uses: ForestsoftGmbH/gh-build-action@main
         with:
           DOCKER_IMAGE: forestsoft/devctl
