@@ -2,8 +2,8 @@ name: Erstelle Release und weise Artefakte zu
 
 on:
   push:
-    #tags:
-    #  - 'v*'
+    tags:
+      - 'v*'
 
 jobs:
   build:
