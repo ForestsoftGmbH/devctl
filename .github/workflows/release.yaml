@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build
-        uses: ./.github/actions/build.yaml
+        uses: ./.github/workflows/build.yaml
         with:
           tag: ${{ github.ref }}
 
