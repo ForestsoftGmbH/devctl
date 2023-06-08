@@ -6,10 +6,26 @@ on:
       - 'v*'
 
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - id: version
+        shell: bash
+        run: |
+         if [ "${{inputs.tag}}" == "" ]; then
+         COMMIT=${GITHUB_SHA::7}
+         echo "docker_tag=$COMMIT" >> $GITHUB_OUTPUT
+         else 
+         echo "docker_tag=${{inputs.tag}}" >> $GITHUB_OUTPUT
+         fi
+         version=$(echo "$COMMIT" | sed 's#refs/tags/##')
+         echo "version=$COMMIT" >> $GITHUB_OUTPUT
   build:
+    needs:
+      - setup
     uses: ./.github/workflows/build.yaml
     with:
-      tag: ${{ github.ref }}
+      version: ${{ needs.setup.outputs.version }}
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
