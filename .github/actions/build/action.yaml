@@ -29,6 +29,18 @@ runs:
         else 
           echo "docker_tag=${{ inputs.tag }}" >> $GITHUB_ENV
         fi
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.19'
+
+    - name: Build
+      shell: bash
+      run: go build -o ./devctl -v ./...
+
+    - name: Test
+      shell: bash
+      run: go test -v ./...
 
     - name: Build Docker Image
       uses: ForestsoftGmbH/gh-build-action@main
