@@ -10,6 +10,9 @@ jobs:
     uses: ./.github/workflows/build.yaml
     with:
       tag: ${{ github.ref }}
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_USERNAME }}
 
   release:
     runs-on: ubuntu-latest
