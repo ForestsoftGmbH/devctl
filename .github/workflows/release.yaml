@@ -29,10 +29,9 @@ jobs:
     steps:
       - uses: ./.github/actions/build
         with:
-          version: ${{ needs.setup.outputs.version }}
-        secrets:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          tag: ${{ needs.setup.outputs.version }}
+          docker_username: ${{ secrets.DOCKER_USERNAME }}
+          docker_password: ${{ secrets.DOCKER_PASSWORD }}
 
   release:
     runs-on: ubuntu-latest

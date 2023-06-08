@@ -1,6 +1,14 @@
 name: Build production Image
 
 inputs:
+  docker_username:
+    required: true
+    default: ""
+    type: string
+  docker_password:
+    required: true
+    default: ""
+    type: string
   tag:
     required: false
     default: ""
@@ -30,5 +38,5 @@ runs:
         DOCKER_TAG: ${{ steps.detect_version.outputs.docker_tag }}
         File: ./Dockerfile
         context: .
-        Username: ${{ secrets.DOCKER_USERNAME }}
-        Password: ${{ secrets.DOCKER_PASSWORD }}
+        Username: ${{ inputs.docker_username }}
+        Password: ${{ inputs.docker_password }}
