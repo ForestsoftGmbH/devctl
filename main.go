@@ -16,9 +16,11 @@ var serviceCollection *client.ServiceCollection
 
 func main() {
 
+	version := "1.0.0"
 	remotePort := flag.Int("p", 0, "Port for remote connection")
 	kubeClient, config, workingNamespace = client.New()
 
+	fmt.Println("Running devctl Version", version)
 	fmt.Println("Working namespace:", workingNamespace)
 
 	serviceCollection = &client.ServiceCollection{}
