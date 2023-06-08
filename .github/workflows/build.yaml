@@ -55,9 +55,6 @@ jobs:
             else 
             echo "docker_tag=${{inputs.tag}}" >> $GITHUB_OUTPUT
             fi
-      - uses: actions/checkout@v2
-        with:
-          ref: '${{steps.detect_version.outputs.docker_tag}}'
       - uses: ForestsoftGmbH/gh-build-action@main
         with:
           DOCKER_IMAGE: forestsoft/devctl
