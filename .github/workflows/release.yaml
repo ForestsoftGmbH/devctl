@@ -8,8 +8,12 @@ on:
 jobs:
   setup:
     runs-on: ubuntu-latest
+    outputs:
+      version:  ${{ steps.setup.outputs.version }}
+      docker_tag:  ${{ steps.setup.outputs.docker_tag }}
     steps:
       - shell: bash
+        id: setup
         run: |
          if [ "${{inputs.tag}}" == "" ]; then
          COMMIT=${GITHUB_SHA::7}
