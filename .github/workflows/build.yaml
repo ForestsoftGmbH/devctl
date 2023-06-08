@@ -31,23 +31,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
-
-      - id: setup
-        run: |
-          mkdir devctl
-      - name: Set up Go
-        uses: actions/setup-go@v4
-        with:
-          go-version: '1.19'
-
-      - name: Build
-        run: |
-          CGO_ENABLED=0 GOOS=linux GOARCH=amd64
-          go build -ldflags="-w -s" -o devctl -v .
-
-      - name: Test
-        run: go test -v ./...
-
       - id: detect_version
         run: |
           if [ "${{inputs.tag}}" == "" ]; then
