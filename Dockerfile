@@ -1,7 +1,7 @@
 FROM golang:alpine as builder
-ENV CGO_ENABLED=1
-ENV GOOS=linux
-ENV GOARCH=amd64
+#ENV CGO_ENABLED=1
+#ENV GOOS=linux
+#ENV GOARCH=amd64
 
 WORKDIR /usr/src
 

@@ -39,11 +39,6 @@ runs:
       run: |
         CGO_ENABLED=1 GOOS=linux GOARCH=amd64
         go build -ldflags="-w -s" -o devctl -v .
-        if [ -d devctl ]; then
-          ls -al devctl
-          echo "devctl is a directory"
-          exit 255
-        fi
 
     - name: Test
       shell: bash
