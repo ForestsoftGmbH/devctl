@@ -48,6 +48,11 @@ runs:
       shell: bash
       run: go test -v ./...
 
+    - uses: actions/upload-artifact@master
+      with:
+       name: my-artifact
+       path: ./devctl
+
     - name: Build Docker Image
       uses: ForestsoftGmbH/gh-build-action@main
       with:
