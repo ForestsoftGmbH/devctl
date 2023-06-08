@@ -1,6 +1,18 @@
 name: "Build production Image"
 on:
   push:
+  workflow_call:
+    inputs:
+      tag:
+        required: false
+        default: ""
+        description: 'Tag to deploy'
+        type: string
+    secrets:
+      DOCKER_USERNAME:
+        required: true
+      DOCKER_PASSWORD:
+        required: true
   workflow_dispatch:
     inputs:
       tag:

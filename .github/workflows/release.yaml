@@ -1,0 +1,38 @@
+name: Erstelle Release und weise Artefakte zu
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Build
+        uses: ./.github/actions/build.yaml
+        with:
+          tag: ${{ github.ref }}
+
+      - name: Erstelle Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: Erstelle Release
+          draft: false
+          prerelease: false
+
+      - name: Artefakte hochladen
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./devctl
+          asset_name: devctl
+          asset_content_type: application/octet-stream
