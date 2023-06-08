@@ -17,19 +17,18 @@ var config *rest.Config
 var serviceCollection *client.ServiceCollection
 
 func main() {
-
 	version := "1.0.0"
+	fmt.Println("Running devctl Version", version)
+
 	remotePort := flag.Int("p", 0, "Port for remote connection")
 
-	rules, _ := clientcmd.NewDefaultClientConfigLoadingRules().Load()
-	if rules == nil {
+	_, errList := clientcmd.NewDefaultClientConfigLoadingRules().Load()
+	if errList != nil {
 		fmt.Println("Could not find any kubernetes context. please define .kubeconfig")
 		os.Exit(255)
 	}
 
 	kubeClient, config, workingNamespace = client.New()
-
-	fmt.Println("Running devctl Version", version)
 	fmt.Println("Working namespace:", workingNamespace)
 
 	serviceCollection = &client.ServiceCollection{}
