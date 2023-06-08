@@ -2,8 +2,8 @@ name: Erstelle Release und weise Artefakte zu
 
 on:
   push:
-    tags:
-      - 'v*'
+    #tags:
+    #  - 'v*'
 
 jobs:
   build:
@@ -12,7 +12,7 @@ jobs:
       tag: ${{ github.ref }}
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
   release:
     runs-on: ubuntu-latest
