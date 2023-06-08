@@ -1,6 +1,8 @@
 name: "Build production Image"
 on:
   push:
+    tags-ignore:
+      - v*
   workflow_call:
     inputs:
       tag:
