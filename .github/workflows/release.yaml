@@ -12,6 +12,7 @@ jobs:
       version:  ${{ steps.setup.outputs.version }}
       docker_tag:  ${{ steps.setup.outputs.docker_tag }}
     steps:
+      - uses: actions/checkout@v3
       - shell: bash
         id: setup
         run: |
