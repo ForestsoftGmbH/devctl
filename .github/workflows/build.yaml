@@ -49,7 +49,8 @@ jobs:
       - id: detect_version
         run: |
             if [ "${{inputs.tag}}" == "" ]; then
-            COMMIT="${{ github.ref_name }}"
+            COMMIT="${{ github.ref }}"
+            COMMIT=${COMMIT:0:6}
             echo "docker_tag=$COMMIT" >> $GITHUB_OUTPUT
             else 
             echo "docker_tag=${{inputs.tag}}" >> $GITHUB_OUTPUT
