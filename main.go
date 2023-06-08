@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	"k8s.io/client-go/tools/clientcmd"
+	"os"
 
 	"github.com/ForestsoftGmbH/devctl/client"
 	"k8s.io/client-go/kubernetes"
@@ -18,6 +20,13 @@ func main() {
 
 	version := "1.0.0"
 	remotePort := flag.Int("p", 0, "Port for remote connection")
+
+	rules, _ := clientcmd.NewDefaultClientConfigLoadingRules().Load()
+	if rules == nil {
+		fmt.Println("Could not find any kubernetes context. please define .kubeconfig")
+		os.Exit(255)
+	}
+
 	kubeClient, config, workingNamespace = client.New()
 
 	fmt.Println("Running devctl Version", version)
