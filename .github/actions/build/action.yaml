@@ -29,6 +29,10 @@ runs:
         else 
           echo "docker_tag=${{ inputs.tag }}" >> $GITHUB_ENV
         fi
+    - id: setup
+      shell: bash
+      run: |
+        mkdir devctl
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
@@ -36,7 +40,9 @@ runs:
 
     - name: Build
       shell: bash
-      run: go build -o ./devctl -v ./...
+      run: |
+        CGO_ENABLED=0 GOOS=linux GOARCH=amd64
+        go build -ldflags="-w -s" -o devctl -v .
 
     - name: Test
       shell: bash
