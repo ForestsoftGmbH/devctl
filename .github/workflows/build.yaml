@@ -38,7 +38,7 @@ jobs:
           go-version: '1.19'
 
       - name: Build
-        run: go build  -v ./...
+        run: go build -o devctl -v ./...
 
       - name: Test
         run: go test -v ./...
@@ -60,4 +60,4 @@ jobs:
           context: .
           Username: ${{ secrets.DOCKER_USERNAME }}
           Password: ${{ secrets.DOCKER_PASSWORD }}
- 
+
