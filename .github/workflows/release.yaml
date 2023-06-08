@@ -21,8 +21,8 @@ jobs:
          else 
          echo "docker_tag=${{inputs.tag}}" >> $GITHUB_OUTPUT
          fi
-         version=$(echo "$COMMIT" | sed 's#refs/tags/##')
-         echo "version=$COMMIT" >> $GITHUB_OUTPUT
+         version=$(echo "${{github.ref}}" | sed 's#refs/tags/##')
+         echo "version=$version" >> $GITHUB_OUTPUT
   build:
     needs:
       - setup
