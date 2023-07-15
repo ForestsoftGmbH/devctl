@@ -11,11 +11,13 @@ import (
 )
 
 type Service struct {
-	Port      int
-	LocalPort int
-	Name      string
-	Namespace string
-	Pod       v1.Pod
+	Port               int
+	LocalPort          int
+	Name               string
+	Namespace          string
+	Pod                v1.Pod
+	Client             kubernetes.Interface
+	PortForwardRequest *PortForwardAPodRequest
 }
 
 func GetSSHService(client kubernetes.Interface, namespace string) *Service {
@@ -48,6 +50,7 @@ func (svc Service) getServiceWithPort(client kubernetes.Interface, namespace str
 						svc.Namespace = namespace
 						svc.Port = int(requiredPort)
 						svc.LocalPort = int(localPort)
+						svc.Client = client
 						return &svc
 					}
 				}

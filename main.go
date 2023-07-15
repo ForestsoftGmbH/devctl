@@ -17,8 +17,8 @@ var config *rest.Config
 var serviceCollection *client.ServiceCollection
 
 func main() {
-	version := "1.0.0"
-	fmt.Println("Running devctl Version", version)
+	version := "1.0.26"
+	fmt.Println("Running devctl version", version)
 
 	remotePort := flag.Int("p", 0, "Port for remote connection")
 
