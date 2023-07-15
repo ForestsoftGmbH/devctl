@@ -135,7 +135,7 @@ func watchPodForTermination(svc Service) error {
 			}
 
 		case <-ctx.Done():
-			log.Println("Exit from waitPodDeleted for POD \"%s\" because the context is done", svc.Pod.Name)
+			log.Printf("Exit from waitPodDeleted for POD \"%s\" because the context is done", svc.Pod.Name)
 			return nil
 		}
 	}
@@ -197,7 +197,7 @@ func restartPortForwarding(svc Service) {
 				}
 			}
 		case <-ctx.Done():
-			log.Println("Exit from restartPortForwarding for POD \"%s\" because the context is done", svc.Pod.Name)
+			log.Printf("Exit from restartPortForwarding for POD \"%s\" because the context is done", svc.Pod.Name)
 			watcher.Stop()
 			break
 		}
